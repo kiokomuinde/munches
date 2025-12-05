@@ -1,8 +1,17 @@
-// main.dart
+// lib/main.dart
 
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
-import 'pages/home_page.dart';
+
+// Import ALL dedicated page files
+import 'pages/home_page.dart'; 
+import 'pages/menu_viewer_page.dart'; 
+import 'pages/placeholder_page.dart'; // Still imported for general use, though less used now
+import 'pages/features_page.dart';      
+import 'pages/pricing_page.dart';      
+import 'pages/login_page.dart';        
+import 'pages/register_venue_page.dart'; 
+import 'pages/how_it_works_page.dart'; // The dedicated page
 
 // --- Color Palette ---
 const Color kPrimaryAccentSpicy = Color(0xFFE84A5F); // Bright Red/Coral
@@ -36,34 +45,32 @@ class MunchesApp extends StatelessWidget {
           onSecondary: kTextDark,
         ),
         scaffoldBackgroundColor: kBackgroundSweet,
-        
         // Font & Typography (Using Montserrat for modern appeal)
         fontFamily: 'Montserrat',
         textTheme: const TextTheme(
           displayLarge: TextStyle(fontSize: 56.0, fontWeight: FontWeight.w900, color: kTextDark), // Headline
           headlineLarge: TextStyle(fontSize: 48.0, fontWeight: FontWeight.w700, color: kTextDark), // Section Titles
-          titleLarge: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600, color: kTextDark),
-          bodyLarge: TextStyle(fontSize: 16.0, color: kTextDark, height: 1.5),
-          labelLarge: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white), // Button Text
+          titleLarge: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600, color: kTextDark), 
+          bodyLarge: TextStyle(fontSize: 16.0, color: kTextDark),
+          bodyMedium: TextStyle(fontSize: 14.0, color: kTextDark),
+          labelLarge: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
         ),
-        
-        // Button Theme
+        // Primary Button Theme
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, 
             backgroundColor: kPrimaryAccentSpicy,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
             textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            elevation: 5,
           ),
         ),
-        
-        // Input Field Theme (For the code entry box)
+        // Input Field Decoration Theme
         inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -75,9 +82,34 @@ class MunchesApp extends StatelessWidget {
           labelStyle: const TextStyle(color: kTextDark),
         ),
       ),
+      
+      // 1. Static Routes 
       initialRoute: '/',
       routes: {
         '/': (context) => const HomePage(),
+        
+        // CORRECTED: Routing to all dedicated page classes
+        '/features': (context) => const FeaturesPage(),         
+        '/pricing': (context) => const PricingPage(),           
+        '/login': (context) => const LoginPage(),               
+        '/register': (context) => const RegisterVenuePage(),    
+        '/how-it-works': (context) => const HowItWorksPage(), 
+      },
+
+      // 2. Dynamic Route Handler (For Guest Menu Access)
+      onGenerateRoute: (settings) {
+        if (settings.name!.startsWith('/menu/')) {
+          final code = settings.name!.substring('/menu/'.length); 
+          
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => MenuViewerPage(shortCode: code),
+          );
+        }
+        // Fallback for unknown routes
+        return MaterialPageRoute(
+          builder: (context) => const Scaffold(body: Center(child: Text('404 Not Found'))),
+        );
       },
     );
   }

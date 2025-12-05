@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:async'; // Import for Timer
+import 'dart:async'; 
 import 'package:url_launcher/url_launcher.dart'; 
 import '../main.dart'; 
 
@@ -10,12 +10,12 @@ import '../main.dart';
 enum InputMode { code, scan }
 
 // --- CONSTANTS AND MOCK DATA ---
-
 const double kDesktopWidth = 1200.0;
 const double kTabletWidth = 800.0;
 const double kSectionPadding = 80.0;
 
 const List<Map<String, dynamic>> kFeatureData = [
+  // ... (Feature data remains unchanged)
   {
     'icon': Icons.qr_code_scanner_rounded,
     'title': 'Instant Menu Access',
@@ -43,6 +43,7 @@ const List<Map<String, dynamic>> kFeatureData = [
 ];
 
 const List<Map<String, dynamic>> kTestimonials = [
+  // ... (Testimonials data remains unchanged)
   {
     'quote': "Munches single-handedly cut our menu printing costs by 90% and allowed us to adapt to supply issues immediately. Our revenue increased 12% in the first quarter!",
     'name': 'Chef Alice Njeri',
@@ -154,12 +155,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 _navBarButton('Pricing'),
                 const SizedBox(width: 20),
                 TextButton(
-                  onPressed: () {},
+                  // LOGIN LINK: Now uses the named route
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/login');
+                  },
                   child: Text('Login', style: Theme.of(context).textTheme.labelLarge!.copyWith(color: kTextDark.withOpacity(0.8))),
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: () {},
+                  // REGISTER VENUE CTA: Now uses the named route
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/register');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kPrimaryAccentSpicy,
                     padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
@@ -174,6 +181,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             IconButton(
               icon: const Icon(Icons.menu, color: kTextDark),
               onPressed: () {
+                // Ensure context is within a Scaffold, which it is in the main build method
                 Scaffold.of(context).openEndDrawer();
               },
             ),
@@ -183,11 +191,24 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _navBarButton(String title) {
+    String route;
+    // Map button title to its corresponding named route
+    if (title == 'Features') {
+      route = '/features';
+    } else if (title == 'How It Works') {
+      route = '/how-it-works';
+    } else if (title == 'Pricing') {
+      route = '/pricing';
+    } else {
+      route = '/'; 
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: TextButton(
         onPressed: () {
-          // Implement scroll to section logic
+          // NAVIGATE TO STATIC NAMED ROUTE
+          Navigator.of(context).pushNamed(route);
         },
         child: Text(
           title,
@@ -203,6 +224,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   // --- SECTION WIDGETS ---
 
   Widget _buildHeroSection(bool isDesktop) {
+    // ... (Section code remains unchanged)
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -242,6 +264,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   
   // WIDGET: Animated Three-Word Slogan (Tap it. Taste it. Love it.)
   Widget _buildAnimatedThreeWordSlogan(bool isDesktop) {
+    // ... (Slogan code remains unchanged)
     return SizedBox(
       height: isDesktop ? 40 : 30, // Fixed height to prevent layout jump
       child: AnimatedSwitcher(
@@ -289,11 +312,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildHeroText(bool isDesktop) {
+    // ... (Hero text code remains largely unchanged)
     return Column(
       crossAxisAlignment: isDesktop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       mainAxisAlignment: isDesktop ? MainAxisAlignment.center : MainAxisAlignment.start,
       children: [
-        // 1. Main Headline (The big text - Munches. removed as requested)
+        // 1. Main Headline
         Text(
           'Ditch the Paper. Serve the Future of Dining.',
           style: Theme.of(context).textTheme.displayLarge!.copyWith(
@@ -321,11 +345,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ),
         const SizedBox(height: 40),
         
-        // Primary CTA Button (existing code)
+        // Primary CTA Button (Registration)
         SizedBox(
           width: isDesktop ? 300 : double.infinity,
           child: ElevatedButton(
-            onPressed: () {},
+            // PRIMARY CTA: Now uses the named route
+            onPressed: () {
+              Navigator.of(context).pushNamed('/register');
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: kPrimaryAccentSpicy,
               elevation: 10, 
@@ -349,8 +376,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 400),
                 transitionBuilder: (Widget child, Animation<double> animation) {
-                  // Sliding transition effect (using a custom transition)
+                  // Sliding transition effect 
                   final slideAnimation = Tween<Offset>(
+                    // Determine slide direction based on the key (mode)
                     begin: child.key == const ValueKey<InputMode>(InputMode.code) ? const Offset(-1.0, 0.0) : const Offset(1.0, 0.0),
                     end: Offset.zero,
                   ).animate(animation);
@@ -378,6 +406,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   
   // Widget to build the toggle buttons
   Widget _buildInputToggle(bool isDesktop) {
+    // ... (Toggle code remains unchanged)
     return Container(
       decoration: BoxDecoration(
         color: kBackgroundSweet,
@@ -412,6 +441,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     required String label,
     required bool isSelected,
   }) {
+    // ... (Toggle button code remains unchanged)
     return InkWell(
       onTap: () {
         setState(() {
@@ -448,8 +478,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   // Widget to build the animated content based on the current mode
   Widget _buildInputContent(bool isDesktop) {
-    // We use a ValueKey to tell AnimatedSwitcher the widgets are different, 
-    // ensuring the animation runs smoothly on state change.
+    // We use a ValueKey to tell AnimatedSwitcher the widgets are different
     switch (_currentMode) {
       case InputMode.code:
         return Container(
@@ -487,9 +516,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               ),
               const SizedBox(width: 10),
               ElevatedButton(
+                // MENU VIEW CTA: Now uses the Dynamic Route
                 onPressed: () {
-                  if (_codeController.text.isNotEmpty) {
-                    // Logic to navigate to menu view using the code
+                  final code = _codeController.text.trim();
+                  if (code.isNotEmpty) {
+                    // Navigate to the dynamic route /menu/{code}
+                    Navigator.of(context).pushNamed('/menu/$code');
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -542,6 +574,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
 
   Widget _buildHeroImage(bool isDesktop) {
+    // ... (Hero image code remains unchanged)
     final slideAnimation = Tween<Offset>(
       begin: const Offset(0.3, 0), 
       end: Offset.zero,
@@ -549,9 +582,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       parent: _animationController,
       curve: Curves.fastOutSlowIn, 
     ));
-
-    // The animation controller is set to .repeat(reverse: true) in initState, 
-    // so this check is no longer needed.
     
     return FadeTransition(
       opacity: _animationController,
@@ -584,6 +614,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   // Testimonials Section
   Widget _buildTestimonialSection(bool isDesktop) {
+    // ... (Testimonial code remains unchanged)
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -636,6 +667,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildTestimonialCard(Map<String, dynamic> data) {
+    // ... (Testimonial card code remains unchanged)
     return Container(
       padding: const EdgeInsets.all(25.0),
       decoration: BoxDecoration(
@@ -677,6 +709,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   // Feature Section
   Widget _buildFeatureSection(bool isDesktop) {
+    // ... (Feature section code remains unchanged)
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(
@@ -728,6 +761,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildFeatureCard(Map<String, dynamic> data) {
+    // ... (Feature card code remains unchanged)
     return Container(
       padding: const EdgeInsets.all(30.0),
       decoration: BoxDecoration(
@@ -765,6 +799,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   // How It Works Section
   Widget _buildHowItWorksSection(bool isDesktop) {
+    // ... (How It Works code remains unchanged)
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -834,6 +869,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     required IconData icon,
     required bool isDesktop,
   }) {
+    // ... (Process step code remains unchanged)
     bool isReverse = stepNumber % 2 == 0 && isDesktop;
 
     final stepContent = [
@@ -907,6 +943,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildAnimatedDivider(bool isDesktop) {
+    // ... (Divider code remains unchanged)
     return RotationTransition(
       turns: Tween<double>(begin: 0.0, end: 0.5).animate(_animationController),
       child: const Icon(
@@ -919,6 +956,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   // Subscription Widget - Full Width Background
   Widget _buildSubscriptionSection(bool isDesktop) {
+    // ... (Subscription section code remains unchanged)
     return Container(
       width: double.infinity, 
       decoration: BoxDecoration(
@@ -1014,6 +1052,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
 
   Widget _buildFooter(bool isDesktop) {
+    // ... (Footer code remains largely unchanged)
     return Container(
       color: kTextDark,
       padding: EdgeInsets.symmetric(
@@ -1064,6 +1103,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildFooterColumn(String title, List<String> links) {
+    // ... (Footer column code remains unchanged)
     return SizedBox(
       width: 200,
       child: Column(
@@ -1077,7 +1117,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           ...links.map((link) => Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    // TODO: Implement navigation for footer links if necessary
+                  },
                   child: Text(
                     link,
                     style: const TextStyle(color: Colors.white70, fontSize: 16),
@@ -1090,6 +1132,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   Widget _buildFooterContact(bool isDesktop) {
+    // ... (Footer contact code remains unchanged)
     return SizedBox(
       width: isDesktop ? 300 : double.infinity,
       child: Column(
@@ -1174,14 +1217,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     decoration: BoxDecoration(color: kPrimaryAccentSpicy),
                     child: Text('Munches', style: Theme.of(context).textTheme.headlineLarge!.copyWith(color: Colors.white)),
                   ),
-                  ListTile(title: const Text('Features'), onTap: () {}),
-                  ListTile(title: const Text('How It Works'), onTap: () {}),
-                  ListTile(title: const Text('Pricing'), onTap: () {}),
+                  // DRAWER LINKS: Now use named routes
+                  ListTile(title: const Text('Features'), onTap: () => Navigator.of(context).pushNamed('/features')),
+                  ListTile(title: const Text('How It Works'), onTap: () => Navigator.of(context).pushNamed('/how-it-works')),
+                  ListTile(title: const Text('Pricing'), onTap: () => Navigator.of(context).pushNamed('/pricing')),
                   const Divider(),
-                  ListTile(title: const Text('Login'), onTap: () {}),
+                  ListTile(title: const Text('Login'), onTap: () => Navigator.of(context).pushNamed('/login')),
                   ListTile(
                     title: Text('Register Venue', style: TextStyle(color: kPrimaryAccentSpicy, fontWeight: FontWeight.bold)),
-                    onTap: () {},
+                    onTap: () => Navigator.of(context).pushNamed('/register'),
                   ),
                 ],
               ),
